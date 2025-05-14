@@ -4,6 +4,8 @@
 
 This project focuses on the **statistical analysis of slot machine games**. The goal is to simulate and analyze the behavior of a slot machine, visualize its outcomes, and provide insights into its probabilities, patterns, and randomness. The project uses **Python** and **OpenCV** for graphical simulations and visualizations.
 
+![image](/imgs/final_img_web.png "image")
+
 ## Features
 
 - **Graphical Simulation**: 
