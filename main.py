@@ -1,176 +1,45 @@
-from xml.etree.ElementTree import tostring
-from requests import get
+from turtle import up
 import cv2 as cv
 import numpy as np
 import random
 import time
+import gaslot 
 
-cv.setUseOptimized(True)
-
-def load_image(filepath):
-    """Load the image for the roulette."""
-    return cv.imread(filepath)
-
-def draw_highlighted_rectangle(img, points, rect_index, alpha=0.5):
-    """Draw the highlighted rectangle with transparency."""
-    overlay = img.copy()
-    for j, point in enumerate(points):
-        if j == rect_index:
-            cv.rectangle(overlay, point[0], point[1], (0, 255, 0), -1)
-    return cv.addWeighted(overlay, alpha, img, 1 - alpha, 0)
-
-def simulate_roulette(img, points, vueltas, velocidad):
-    """Simulate the roulette animation."""
-    total_rectangulos = len(points)
-    base_img = img.copy()
-
-    for i in range(vueltas * total_rectangulos + random.randint(0, total_rectangulos - 1)):
-        img = base_img.copy()
-        rect_index = i % total_rectangulos
-        img = draw_highlighted_rectangle(img, points, rect_index)
-
-        cv.imshow("Roulette", img)
-        cv.waitKey(1)
-
-        if i > vueltas * total_rectangulos * 0.8:
-            velocidad += 0.02
-
-        time.sleep(velocidad)
-
-def get_user_input(apuestas, img, config_values):
-    
-    key = cv.waitKey(1) & 0xFF  # Captura la tecla presionada
-
-    if key == 49:  # 1
-        if apuestas["limon"] < 9:
-            apuestas["limon"] += 1
-            apuestas["total"] += 1
-            cv.rectangle(img, (1060, 190), (1095, 230), (0, 0, 0), -1)
-            cv.putText(img, str(apuestas["limon"]), (1070, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-            config_values["render_img"] = True
-      
-    
-    elif key == 50:  # 2
-        if apuestas["manzana"] < 9:
-            apuestas["manzana"] += 1
-            apuestas["total"] += 1
-            cv.rectangle(img, (1230, 190), (1265, 230), (0, 0, 0), -1)
-            cv.putText(img, str(apuestas["manzana"]), (1230, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-            config_values["render_img"] = True
-      
-    
-    elif key == 51:  # 3
-        if apuestas["cereza"] < 9:
-            apuestas["cereza"] += 1
-            apuestas["total"] += 1
-            cv.rectangle(img, (1380, 190), (1415, 230), (0, 0, 0), -1)
-            cv.putText(img, str(apuestas["cereza"]), (1390, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-            config_values["render_img"] = True
-      
-
-    elif key == 52:  # 4
-        if apuestas["sietes"] < 9:
-            apuestas["sietes"] += 1
-            apuestas["total"] += 1
-            cv.rectangle(img, (1540, 190), (1575, 230), (0, 0, 0), -1)
-            cv.putText(img, str(apuestas["sietes"]), (1550, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-            config_values["render_img"] = True
-      
-    elif key == 53:  # 5
-        if apuestas["campana"] < 9:
-            apuestas["campana"] += 1
-            apuestas["total"] += 1
-            cv.rectangle(img, (1700, 190), (1735, 230), (0, 0, 0), -1)
-            cv.putText(img, str(apuestas["campana"]), (1710, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-            config_values["render_img"] = True
-      
-    elif key == 54:  # 6
-        if apuestas["estrella"] < 9:
-            apuestas["estrella"] += 1
-            apuestas["total"] += 1
-            cv.rectangle(img, (1060, 430), (1095, 470), (0, 0, 0), -1)
-            cv.putText(img, str(apuestas["estrella"]), (1070, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-            config_values["render_img"] = True
-      
-    
-    elif key == 55:  # 7
-        if apuestas["naranja"] < 9:
-            apuestas["naranja"] += 1
-            apuestas["total"] += 1
-            cv.rectangle(img, (1230, 430), (1265, 470), (0, 0, 0), -1)
-            cv.putText(img, str(apuestas["naranja"]), (1230, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-            config_values["render_img"] = True
-      
-    
-    elif key == 56:  # 8
-        if apuestas["sandia"] < 9:
-            apuestas["sandia"] += 1
-            apuestas["total"] += 1
-            cv.rectangle(img, (1380, 430), (1415, 470), (0, 0, 0), -1)
-            cv.putText(img, str(apuestas["sandia"]), (1390, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-            config_values["render_img"] = True
-             
-    elif key == 57:  #9 
-        if apuestas["bar"] < 9:
-            apuestas["bar"] += 1
-            apuestas["total"] += 1
-            cv.rectangle(img, (1540, 430), (1575, 470), (0, 0, 0), -1)
-            cv.putText(img, str(apuestas["bar"]), (1550, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-            
-            cv.rectangle(img, (1700, 430), (1735, 470), (0, 0, 0), -1)
-            cv.putText(img, str(apuestas["bar"]), (1710, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-            config_values["render_img"] = True
-           
-def dibujar_apuestas(img, apuestas):
-    cv.putText(img, str(apuestas["limon"]), (1070, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-    cv.putText(img, str(apuestas["manzana"]), (1230, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-    cv.putText(img, str(apuestas["cereza"]), (1390, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-    cv.putText(img, str(apuestas["sietes"]), (1550, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-    cv.putText(img, str(apuestas["campana"]), (1710, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-    
-    cv.putText(img, str(apuestas["estrella"]), (1070, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-    cv.putText(img, str(apuestas["naranja"]), (1230, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-    cv.putText(img, str(apuestas["sandia"]), (1390, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-    cv.putText(img, str(apuestas["bar"]), (1550, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-    cv.putText(img, str(apuestas["bar"]), (1710, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-
-def resetar_apuesta_to_cero(apuestas, img):
-
-    apuestas.update({key: 0 for key in apuestas})
-    cv.rectangle(img, (1060, 190), (1095, 230), (0, 0, 0), -1)
-    cv.putText(img, str(apuestas["limon"]), (1070, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-
-    cv.rectangle(img, (1230, 190), (1265, 230), (0, 0, 0), -1)
-    cv.putText(img, str(apuestas["manzana"]), (1230, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-
-    cv.rectangle(img, (1380, 190), (1415, 230), (0, 0, 0), -1)
-    cv.putText(img, str(apuestas["cereza"]), (1390, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-
-    cv.rectangle(img, (1540, 190), (1575, 230), (0, 0, 0), -1)
-    cv.putText(img, str(apuestas["sietes"]), (1550, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-
-    cv.rectangle(img, (1700, 190), (1735, 230), (0, 0, 0), -1)
-    cv.putText(img, str(apuestas["campana"]), (1710, 220), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-
-    cv.rectangle(img, (1060, 430), (1095, 470), (0, 0, 0), -1)
-    cv.putText(img, str(apuestas["estrella"]), (1070, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-    
-    cv.rectangle(img, (1230, 430), (1265, 470), (0, 0, 0), -1)
-    cv.putText(img, str(apuestas["naranja"]), (1230, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-
-    cv.rectangle(img, (1380, 430), (1415, 470), (0, 0, 0), -1)
-    cv.putText(img, str(apuestas["sandia"]), (1390, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-
-    cv.rectangle(img, (1540, 430), (1575, 470), (0, 0, 0), -1)
-    cv.putText(img, str(apuestas["bar"]), (1550, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-
-    cv.rectangle(img, (1700, 430), (1735, 470), (0, 0, 0), -1)
-    cv.putText(img, str(apuestas["bar"]), (1710, 460), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
-
+                           
 def main():
-    img = load_image("imgs/final_img.png")
+    
+    img = cv.imread("imgs/final_img2.png")
 
-    points = [
+    gaslot.EntityRegistry.register("Image", img)
+
+    gaslot.EntityRegistry.register("PointPayoutsText", {
+        "limon": (1070, 60),
+        "manzana": (1230, 60),
+        "cereza": (1390, 60),
+        "sietes": (1550, 60),
+        "campana": (1710, 60),
+        "estrella": (1070, 300),
+        "naranja": (1230, 300),
+        "sandia": (1390, 300),
+        "bar50": (1550, 300),
+        "bar100": (1710, 300),
+    })
+
+    gaslot.EntityRegistry.register("Payouts", {
+        "limon": 15,
+        "manzana": 5,
+        "cereza": 2,
+        "sietes": 40,
+        "campana": 20,
+        "estrella": 30,
+        "naranja": 10,
+        "sandia": 15,
+        "bar50": 50,
+        "bar100": 100
+    })
+
+
+    gaslot.EntityRegistry.register("PointsRoulette", [
         ((50, 60), (190, 200)),
         ((190, 60), (330, 200)),
         ((330, 60), (455, 200)),
@@ -195,14 +64,36 @@ def main():
         ((50, 400), (200, 510)),
         ((50, 310), (200, 400)),
         ((50, 200), (200, 310)),
-    ]
+    ])
 
-    gan_cre = {
+
+    gaslot.EntityRegistry.register("Bank", {
         "ganancias": 0,
         "credito": 0,
-    }
+    })
     
-    apuestas = {
+    
+    gaslot.EntityRegistry.register("CfgValRoul", {
+        "vueltas": 20,
+        "velocidad": 0.01,
+    })
+  
+    gaslot.EntityRegistry.register("Keyboard", {
+    "limon": {"key_code": 49, "active": False},  # 1
+    "manzana": {"key_code": 50, "active": False},  # 2
+    "cereza": {"key_code": 51, "active": False},  # 3
+    "sietes": {"key_code": 52, "active": False},  # 4
+    "campana": {"key_code": 53, "active": False},  # 5
+    "estrella": {"key_code": 54, "active": False},  # 6
+    "naranja": {"key_code": 55, "active": False},  # 7
+    "sandia": {"key_code": 56, "active": False},  # 8
+    "bar": {"key_code": 57, "active": False},  # 9
+    "doblar": {"key_code": 100, "active": False},  # d
+    "jugar": {"key_code": 13, "active": False},  # enter
+    "salir": {"key_code": 27, "active": False},  # esc
+})
+
+    gaslot.EntityRegistry.register("Bets", {
         "manzana": 0,
         "estrella": 0,
         "bar": 0,
@@ -213,53 +104,72 @@ def main():
         "limon": 0,
         "sietes": 0,
         "total":0
-    }
-    
-    config_values = {
-        "vueltas": 3,
-        "velocidad": 0.1,
-        "render_img": True,
-        "playing": False,
-        "doblar": False,
-    }
+    })
 
-    playing = False
-    doblar = False
+    gaslot.EntityRegistry.register("PointsBetsRec", {
+        "limon": {(1060, 190), (1095, 230)},
+        "manzana": {(1230, 190), (1265, 230)},
+        "cereza": {(1380, 190), (1415, 230)},
+        "sietes": {(1540, 190), (1575, 230)},
+        "campana": {(1700, 190), (1735, 230)},
+        "estrella": {(1060, 430), (1095, 470)},
+        "naranja":  {(1230, 430), (1265, 470)},
+        "sandia": {(1380, 430), (1415, 470)},
+        "bar": {(1600, 430), (1655, 470)},
+    })
 
-    dibujar_apuestas(img, apuestas)
+    gaslot.EntityRegistry.register("PointsBetsText", {
+        "limon": (1070, 220),
+        "manzana": (1230, 220),
+        "cereza": (1390, 220),
+        "sietes": (1550, 220),
+        "campana": (1710, 220),
+        "estrella": (1070, 460),
+        "naranja": (1230, 460),
+        "sandia": (1390, 460),
+        "bar": (1630, 460),
+    })
     
-    img_c = img.copy()
+    gaslot.dw_payouts()
+    gaslot.dw_bets_to_cero()
     
+    imgr = gaslot.EntityRegistry.get("Image")
     
-    while True:      
-        
-        if config_values["render_img"]:
-            cv.imshow("Roulette", img_c)
-            redender_img = False
+    # Variables para calcular FPS
+    prev_time = time.time()
 
-        get_user_input(apuestas, img_c, config_values)
+    while True:
         
-        key = cv.waitKey(1) & 0xFF
-        if key == 27:
-            break     
-        
-        if key == 13:
-            #debe haber almenos una apuesta
-            if apuestas["total"] > 0:
-                playing = True
-                doblar = False 
-        
-        if key  == 100:
-            if credito > 0:
-                doblar = True
+        current_time = time.time()
+        fps = int(1 / (current_time - prev_time))
+        prev_time = current_time
 
-        if playing:
-            simulate_roulette(img_c, points, config_values["vueltas"], config_values["velocidad"])
-            resetar_apuesta_to_cero(apuestas, img_c)
-            playing = False
-           
+        # Mostrar FPS en la imagen
+        img_with_fps = imgr.copy()
+        cv.putText(img_with_fps, f"FPS: {fps}", (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+
+        cv.imshow("Roulette", img_with_fps)    
+        key = gaslot.get_keyboard_input()
+        
+        if key is not None:
+        
+            gaslot.dw_update_bet(key)
+            
+            if key == "salir":
+                break
+            
+            #debe haber almenas una apuesta
+            elif key == "jugar":
+                if gaslot.EntityRegistry.get("Bets")["total"] > 0:
+                    gaslot.simulate_roulette()
+                    gaslot.dw_bets_to_cero()
+                    
+
+            elif key == "doblar":
+                print("apuestas ", gaslot.EntityRegistry.get("Bets"))
+                pass
+    
     cv.destroyAllWindows()
-        
 
 if __name__ == "__main__":
     main()
