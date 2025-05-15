@@ -1,14 +1,16 @@
 from turtle import up
 import cv2 as cv
 import numpy as np
-import random
-import time
+import os 
 import gaslot 
 
                            
 def main():
     
-    img = cv.imread("imgs/final_img2.png")
+    Base_dir = os.path.dirname(os.path.abspath(__file__))
+    coin_path = os.path.join(Base_dir, "audio", "coin.mp3")
+
+    img = cv.imread("imgs/final_img.png")
 
     gaslot.EntityRegistry.register("Image", img)
 
@@ -38,7 +40,6 @@ def main():
         "bar100": 100
     })
 
-
     gaslot.EntityRegistry.register("PointsRoulette", [
         ((50, 60), (190, 200)),
         ((190, 60), (330, 200)),
@@ -66,13 +67,21 @@ def main():
         ((50, 200), (200, 310)),
     ])
 
-
     gaslot.EntityRegistry.register("Bank", {
         "winnings": 0,
         "credit": 0,
     })
-    
-    
+
+    gaslot.EntityRegistry.register("PointsBankText", {
+        "credit": (1240, 590),
+        "winnings": (1500, 590),
+    })
+
+    gaslot.EntityRegistry.register("PointsBankRec", {
+        "credit": {(1200, 565), (1340, 620)},
+        "winnings": {(1450, 565), (1590, 620)},
+    })
+
     gaslot.EntityRegistry.register("CfgValRoul", {
         "spins": 3,
         "spin_speed": 0.01,
@@ -91,6 +100,7 @@ def main():
     "double": {"key_code": 100, "active": False},  # d
     "play": {"key_code": 13, "active": False},  # enter
     "exit": {"key_code": 27, "active": False},  # esc
+    "credit": {"key_code": 99, "active": False},  # c
 })
 
     gaslot.EntityRegistry.register("Bets", {
@@ -130,26 +140,32 @@ def main():
         "bar": (1630, 460),
     })
     
+    gaslot.EntityRegistry.register("Audio", {
+        "coin": os.path.join(Base_dir, "audio", "coin.mp3"),
+        "error": os.path.join(Base_dir, "audio", "error.mp3"),
+        "creditplus": os.path.join(Base_dir, "audio", "creditplus.mp3"),
+    })
+
     gaslot.dw_payouts()
     gaslot.dw_bets_to_cero()
+    gaslot.dw_update_credits_winnings_to_cero()
     
     imgr = gaslot.EntityRegistry.get("Image")
-    
-    
-
+   
     while True:
         
         cv.imshow("Roulette", imgr)    
         key = gaslot.get_keyboard_input()
         
         if key is not None:
-            
+
             gaslot.rd_update_bet(key)
             gaslot.rd_play_round(key)
+            gaslot.rd_update_credits(key)
             
             if key == "exit":
                 break
-
+    
     cv.destroyAllWindows()
 
 if __name__ == "__main__":

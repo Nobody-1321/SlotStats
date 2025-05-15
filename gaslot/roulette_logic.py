@@ -14,10 +14,6 @@ def lg_draw_highlighted_rectangle(img, points, rect_index, alpha=0.5):
 
 def lg_simulate_roulette(img, points, spins, spin_speed):
         
-    pygame.mixer.init()
-    pygame.mixer.music.load("./music/level.mp3")
-    pygame.mixer.music.play(-1) 
-
     total_rectangulos = len(points)
     base_img = img.copy()
     
@@ -36,4 +32,3 @@ def lg_simulate_roulette(img, points, spins, spin_speed):
 
         time.sleep(spin_speed)
     
-    pygame.mixer.music.stop()  # Detener la música al finalizar
