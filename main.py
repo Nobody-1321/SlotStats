@@ -68,14 +68,14 @@ def main():
 
 
     gaslot.EntityRegistry.register("Bank", {
-        "ganancias": 0,
-        "credito": 0,
+        "winnings": 0,
+        "credit": 0,
     })
     
     
     gaslot.EntityRegistry.register("CfgValRoul", {
-        "vueltas": 20,
-        "velocidad": 0.01,
+        "spins": 3,
+        "spin_speed": 0.01,
     })
   
     gaslot.EntityRegistry.register("Keyboard", {
@@ -88,9 +88,9 @@ def main():
     "naranja": {"key_code": 55, "active": False},  # 7
     "sandia": {"key_code": 56, "active": False},  # 8
     "bar": {"key_code": 57, "active": False},  # 9
-    "doblar": {"key_code": 100, "active": False},  # d
-    "jugar": {"key_code": 13, "active": False},  # enter
-    "salir": {"key_code": 27, "active": False},  # esc
+    "double": {"key_code": 100, "active": False},  # d
+    "play": {"key_code": 13, "active": False},  # enter
+    "exit": {"key_code": 27, "active": False},  # esc
 })
 
     gaslot.EntityRegistry.register("Bets", {
@@ -135,40 +135,21 @@ def main():
     
     imgr = gaslot.EntityRegistry.get("Image")
     
-    # Variables para calcular FPS
-    prev_time = time.time()
+    
 
     while True:
         
-        current_time = time.time()
-        fps = int(1 / (current_time - prev_time))
-        prev_time = current_time
-
-        # Mostrar FPS en la imagen
-        img_with_fps = imgr.copy()
-        cv.putText(img_with_fps, f"FPS: {fps}", (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
-
-        cv.imshow("Roulette", img_with_fps)    
+        cv.imshow("Roulette", imgr)    
         key = gaslot.get_keyboard_input()
         
         if key is not None:
-        
-            gaslot.dw_update_bet(key)
             
-            if key == "salir":
+            gaslot.rd_update_bet(key)
+            gaslot.rd_play_round(key)
+            
+            if key == "exit":
                 break
-            
-            #debe haber almenas una apuesta
-            elif key == "jugar":
-                if gaslot.EntityRegistry.get("Bets")["total"] > 0:
-                    gaslot.simulate_roulette()
-                    gaslot.dw_bets_to_cero()
-                    
 
-            elif key == "doblar":
-                print("apuestas ", gaslot.EntityRegistry.get("Bets"))
-                pass
-    
     cv.destroyAllWindows()
 
 if __name__ == "__main__":

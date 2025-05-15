@@ -1,6 +1,12 @@
 from .entity_register import EntityRegistry
 import cv2 as cv
 
+def dw_rectangle(key, img, point1, point2):
+    cv.rectangle(img, point1, point2, (0, 0, 0), -1)
+    
+def dw_text(key, img, bet, point):
+    cv.putText(img, str(bet), point, cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
+
 def dw_payouts():
     Payouts = EntityRegistry.get("Payouts")
     PointPayouts = EntityRegistry.get("PointPayoutsText")
@@ -25,19 +31,3 @@ def dw_bets_to_cero():
         cv.rectangle(img, list(PointsBetsRec[key])[0], list(PointsBetsRec[key])[1], (0, 0, 0), -1)
         cv.putText(img, str(0), PointsBetsText[key], cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
  
-def dw_update_bet(key):
-    
-    bets = EntityRegistry.get("Bets")
-    
-    if key not in bets:
-        return
-
-    img = EntityRegistry.get("Image")
-    PointsBetsText = EntityRegistry.get("PointsBetsText")
-    PointsBetsRec  = EntityRegistry.get("PointsBetsRec")
-    
-    if bets[key] < 9:
-        bets[key] += 1
-        bets["total"] += 1
-        cv.rectangle(img, list(PointsBetsRec[key])[0], list(PointsBetsRec[key])[1], (0, 0, 0), -1)
-        cv.putText(img, str(bets[key]), PointsBetsText[key], cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
