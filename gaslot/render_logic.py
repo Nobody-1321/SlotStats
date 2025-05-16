@@ -38,8 +38,8 @@ def rd_play_round(key):
     
     lg_initialize_sound(EntityRegistry.get("Audio")["roulette"], volume=0.5, loop=0)
     
-    lg_simulate_roulette(img, points, spins, spin_speed)
-    #lg_idle_blink_animation(img, points, 40, delay=0.15)
+    #lg_simulate_roulette(img, points, spins, spin_speed)
+    lg_idle_blink_animation(img, points, 50, delay=0.15)
     
     lg_stop_sound(0.20)        
     dw_bets_to_cero()

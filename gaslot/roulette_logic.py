@@ -51,15 +51,32 @@ def lg_idle_spin_animation(img, points, delay=0.1):
                 return
             time.sleep(delay)
 
-def lg_idle_blink_animation(img, points, blink_times=20, delay=0.15):
-    """Animación de parpadeo aleatorio para modo inactivo."""
+def lg_idle_blink_animation(img, points, blink_times=20, delay=0.15, highlight_blink=8):
+    """
+    Animación de parpadeo aleatorio para modo inactivo.
+    Al final, la última casilla parpadea varias veces para llamar la atención.
+    """
     total_rectangulos = len(points)
     base_img = img.copy()
+    last_index = 0
+
+    # Parpadeo aleatorio
     for _ in range(blink_times):
         rect_index = random.randint(0, total_rectangulos - 1)
+        last_index = rect_index
         img = base_img.copy()
         img = lg_draw_highlighted_rectangle(img, points, rect_index, alpha=0.7)
         cv.imshow("Roulette", img)
         if cv.waitKey(1) & 0xFF == 27:
             return
         time.sleep(delay)
+
+    # Parpadeo final de la última casilla
+    for b in range(highlight_blink):
+        img = base_img.copy()
+        if b % 2 == 0:
+            img = lg_draw_highlighted_rectangle(img, points, last_index, alpha=0.9)
+        cv.imshow("Roulette", img)
+        if cv.waitKey(1) & 0xFF == 27:
+            return
+        time.sleep(0.18)
