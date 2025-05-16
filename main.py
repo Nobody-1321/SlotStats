@@ -144,6 +144,7 @@ def main():
         "coin": os.path.join(Base_dir, "audio", "coin.mp3"),
         "error": os.path.join(Base_dir, "audio", "error.mp3"),
         "creditplus": os.path.join(Base_dir, "audio", "creditplus.mp3"),
+        "roulette": os.path.join(Base_dir, "audio", "thereturn.mp3"),
     })
 
     gaslot.dw_payouts()
@@ -158,7 +159,10 @@ def main():
         key = gaslot.get_keyboard_input()
         
         if key is not None:
-
+            
+            gaslot.lg_update_bet(key)
+            gaslot.lg_credit(key)
+            
             gaslot.rd_update_bet(key)
             gaslot.rd_play_round(key)
             gaslot.rd_update_credits(key)

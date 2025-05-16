@@ -20,8 +20,9 @@ def dw_bets_to_cero():
     
     for k in EntityRegistry.get("Bets"):
         EntityRegistry.get("Bets")[k] = 0
-        EntityRegistry.get("Bets")["total"] = 0
-
+        
+    EntityRegistry.get("Bets")["total"] = 0
+    
     img = EntityRegistry.get("Image")
     
     PointsBetsText = EntityRegistry.get("PointsBetsText")
